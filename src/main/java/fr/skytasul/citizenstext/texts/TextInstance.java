@@ -2,9 +2,14 @@ package fr.skytasul.citizenstext.texts;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
+import fr.skytasul.citizenstext.options.*;
+import fr.skytasul.citizenstext.predicates.NamedPredicate;
+import jdk.internal.net.http.common.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -20,13 +25,6 @@ import fr.skytasul.citizenstext.CitizensTextConfiguration;
 import fr.skytasul.citizenstext.CitizensTextConfiguration.ClickType;
 import fr.skytasul.citizenstext.event.TextSendEvent;
 import fr.skytasul.citizenstext.message.Message;
-import fr.skytasul.citizenstext.options.OptionMessages;
-import fr.skytasul.citizenstext.options.OptionName;
-import fr.skytasul.citizenstext.options.OptionNear;
-import fr.skytasul.citizenstext.options.OptionPlaybackTime;
-import fr.skytasul.citizenstext.options.OptionRandom;
-import fr.skytasul.citizenstext.options.OptionRepeat;
-import fr.skytasul.citizenstext.options.TextOption;
 import fr.skytasul.citizenstext.options.TextOptionsRegistry.TextOptionType;
 import fr.skytasul.citizenstext.players.CTPlayer;
 import fr.skytasul.citizenstext.players.CTPlayerText;
@@ -40,10 +38,10 @@ import net.citizensnpcs.api.npc.NPC;
 
 public class TextInstance implements Listener{
 
-	private Map<Class<?>, TextOption<?>> options = new HashMap<>();
+	private final Map<Class<?>, TextOption<?>> options = new HashMap<>();
 	
 	private NPC npc;
-	private int npc_id;
+	private final int npc_id;
 	private boolean created = false;
 	private ConfigurationSection config;
 	
@@ -125,8 +123,8 @@ public class TextInstance implements Listener{
 		return getOption(OptionName.class).getOrDefault();
 	}
 	
-	public OptionMessages getMessages() {
-		return getOption(OptionMessages.class);
+	public OptionMessageStates getMessages() {
+		return getOption(OptionMessageStates.class);
 	}
 	
 	public void unload(){
@@ -137,7 +135,7 @@ public class TextInstance implements Listener{
 	
 	public void delete() {
 		unload();
-		config.getParent().set(config.getName(), null);
+		Objects.requireNonNull(config.getParent()).set(config.getName(), null);
 		try {
 			CitizensText.getInstance().getTexts().save();
 		}catch (IOException e) {
@@ -147,7 +145,7 @@ public class TextInstance implements Listener{
 	
 	@EventHandler
 	public void onMove(PlayerMoveEvent e){
-		if (e.getFrom().getBlockX() == e.getTo().getBlockX() && e.getFrom().getBlockY() == e.getTo().getBlockY() && e.getFrom().getBlockZ() == e.getFrom().getBlockZ()) return;
+		if (e.getFrom().getBlockX() == Objects.requireNonNull(e.getTo()).getBlockX() && e.getFrom().getBlockY() == e.getTo().getBlockY() && e.getFrom().getBlockZ() == e.getFrom().getBlockZ()) return;
 		if (!getOption(OptionNear.class).getOrDefault() || isRandom()) return;
 		Player p = e.getPlayer();
 		if (!npc.isSpawned() || npc.getEntity().getWorld() != e.getTo().getWorld()) return;
@@ -186,18 +184,28 @@ public class TextInstance implements Listener{
 	}
 	
 	public void send(Player p, CTPlayerText playerText) {
-		OptionMessages messages = getMessages();
-		if (messages.messagesSize() == 0) return;
+		OptionMessageStates messageStates = getMessages();
+		List<Message> messages = null;
+		for (Pair<NamedPredicate, List<Message>> pair : messageStates.getValue())
+		{
+			if (pair.first.test(p))
+			{
+				messages = pair.second;
+				break;
+			}
+		}
+
+		if (messages == null || messages.size() == 0) return;
 		
 		if (playerText.hasTime()) {
 			if (playerText.getTime() > System.currentTimeMillis() || (!playerText.canRepeat() && !isRepeat())) return;
 			playerText.removeTime();
 		}
-		if (CitizensTextConfiguration.getClickMinimumTime() > 0) playerText.setTime(System.currentTimeMillis() + CitizensTextConfiguration.getClickMinimumTime() * 1000);
+		if (CitizensTextConfiguration.getClickMinimumTime() > 0) playerText.setTime(System.currentTimeMillis() + CitizensTextConfiguration.getClickMinimumTime() * 1000L);
 		
 		if (isRandom()) {
-			int id = ThreadLocalRandom.current().nextInt(messages.messagesSize());
-			TextSendEvent event = new TextSendEvent(p, this, messages.getMessage(id));
+			int id = ThreadLocalRandom.current().nextInt(messages.size());
+			TextSendEvent event = new TextSendEvent(p, this, messages.get(id));
 			Bukkit.getPluginManager().callEvent(event);
 			if (!event.isCancelled()) event.getMessage().send(p, id, this);
 			return;
@@ -206,13 +214,13 @@ public class TextInstance implements Listener{
 		if (playerText.hasStarted()) { // player has already started
 			if (!playerText.hasResetTime() || playerText.getResetTime() > System.currentTimeMillis()) {
 				id = playerText.getMessageIndex();
-				if (id >= messages.messagesSize()) id = 0;
+				if (id >= messages.size()) id = 0;
 			}else id = 0;
 			playerText.removeNextMessageTask();
 		}else { // never started
 			id = 0;
 		}
-		Message message = messages.getMessage(id);
+		Message message = messages.get(id);
 		TextSendEvent event = new TextSendEvent(p, this, message);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled()) return;
@@ -220,11 +228,11 @@ public class TextInstance implements Listener{
 		message.send(p, id, this);
 		
 		id++;
-		if (messages.messagesSize() == id) { // last message
+		if (messages.size() == id) { // last message
 			playerText.removeMessage();
 			if (isRepeat()) {
 				int playback = getOption(OptionPlaybackTime.class).getOrDefault();
-				if (playback > 0) playerText.setTime(System.currentTimeMillis() + playback * 1000);
+				if (playback > 0) playerText.setTime(System.currentTimeMillis() + playback * 1000L);
 			}else {
 				playerText.setNoRepeat();
 			}
@@ -232,14 +240,14 @@ public class TextInstance implements Listener{
 		}
 		
 		// not last message
-		if (CitizensTextConfiguration.getKeepTime() != -1) playerText.setResetTime(System.currentTimeMillis() + CitizensTextConfiguration.getKeepTime() * 1000);
+		if (CitizensTextConfiguration.getKeepTime() != -1) playerText.setResetTime(System.currentTimeMillis() + CitizensTextConfiguration.getKeepTime() * 1000L);
 		playerText.setMessage(id);
 		if (message.getDelay() >= 0) { // TASK SYSTEM
 			playerText.setNextMessageTask(Bukkit.getScheduler().runTaskLater(CitizensText.getInstance(), () -> { // create the task
 				playerText.removeNextMessageTask();
 				if (CitizensTextConfiguration.getDistanceToContinue() > 0) {
 					Entity entity = npc.getEntity();
-					if (p == null || entity == null) return;
+					if (entity == null) return;
 					if (p.getWorld() != entity.getWorld()) return;
 					if (p.getLocation().distance(entity.getLocation()) > CitizensTextConfiguration.getDistanceToContinue()) return; // player too far
 				}
