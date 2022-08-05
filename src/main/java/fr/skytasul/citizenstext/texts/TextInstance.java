@@ -43,7 +43,7 @@ public class TextInstance implements Listener{
 	private Map<Class<?>, TextOption<?>> options = new HashMap<>();
 	
 	private NPC npc;
-	private int id;
+	private int npc_id;
 	private boolean created = false;
 	private ConfigurationSection config;
 	
@@ -52,7 +52,7 @@ public class TextInstance implements Listener{
 	}
 	
 	public TextInstance(NPC npc, ConfigurationSection config) {
-		this.id = npc.getId();
+		this.npc_id = npc.getId();
 		this.npc = npc;
 		this.config = config;
 	}
@@ -68,7 +68,7 @@ public class TextInstance implements Listener{
 				for (String key : config.getKeys(false)) {
 					TextOptionType<?> optionType = CitizensText.getInstance().getOptionsRegistry().getOptionType(key);
 					if (optionType == null) {
-						if (!key.equalsIgnoreCase("npc")) CitizensText.getInstance().getLogger().warning("Unknown key " + key + " in " + id + " data section");
+						if (!key.equalsIgnoreCase("npc")) CitizensText.getInstance().getLogger().warning("Unknown key " + key + " in " + npc_id + " data section");
 					}else {
 						TextOption<?> option = optionType.createOption(this);
 						option.loadValue(config);
@@ -84,7 +84,7 @@ public class TextInstance implements Listener{
 		for (TextOption<?> option : options.values()) {
 			option.saveValue();
 		}
-		config.set("npc", id);
+		config.set("npc", npc_id);
 	}
 	
 	public void saveOption(TextOption<?> option) throws IOException {
@@ -163,7 +163,7 @@ public class TextInstance implements Listener{
 		if (e.getNPC() == npc){
 			unload();
 			npc = null;
-			CitizensText.getInstance().getLogger().info("Text instance of NPC " + id + " is now dead.");
+			CitizensText.getInstance().getLogger().info("Text instance of NPC " + npc_id + " is now dead.");
 		}
 	}
 	

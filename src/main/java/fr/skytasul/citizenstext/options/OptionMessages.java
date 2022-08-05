@@ -1,12 +1,7 @@
 package fr.skytasul.citizenstext.options;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
@@ -96,7 +91,7 @@ public class OptionMessages extends TextOption<List<Message>> {
 				msg = new Message(messagesSection.getConfigurationSection(mkey));
 			}else msg = new Message(messagesSection.getString(mkey));
 			return new AbstractMap.SimpleEntry<>(Integer.valueOf(mkey), msg);
-		}).sorted((x, y) -> Integer.compare(x.getKey(), y.getKey())).map(Entry::getValue).collect(Collectors.toList());
+		}).sorted(Comparator.comparingInt(AbstractMap.SimpleEntry::getKey)).map(Entry::getValue).collect(Collectors.toList());
 	}
 	
 }

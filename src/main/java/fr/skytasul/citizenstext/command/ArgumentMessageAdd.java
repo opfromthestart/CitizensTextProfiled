@@ -35,7 +35,7 @@ public class ArgumentMessageAdd extends TextCommandArgument<OptionMessages> {
 	
 	@Override
 	protected String getHelpDescription() {
-		return "Add a message (use {nl} to skip a line)";
+		return "Add a message (use {nl} to skip a line, or {PLAYER} to use the players name)";
 	}
 	
 }
