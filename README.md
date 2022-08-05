@@ -1,4 +1,4 @@
-# CitizensText
+# CitizensTextProfiled
 A Minecraft Spigot plugins which allows NPCs from Citizens to speak.
 
 It is an *addon* for the [Citizens](https://www.spigotmc.org/resources/citizens.13811/) plugin, which can be downloaded for free [here](https://ci.citizensnpcs.co/job/Citizens2/).
