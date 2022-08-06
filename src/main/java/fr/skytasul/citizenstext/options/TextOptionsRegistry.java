@@ -9,11 +9,11 @@ import fr.skytasul.citizenstext.texts.TextInstance;
 
 public class TextOptionsRegistry {
 	
-	private Map<Class<? extends TextOption<?>>, TextOptionType<?>> options = new HashMap<>();
-	private Map<String, TextOptionType<?>> configMapping = new HashMap<>();
+	private final Map<Class<? extends TextOption<?>>, TextOptionType<?>> options = new HashMap<>();
+	private final Map<String, TextOptionType<?>> configMapping = new HashMap<>();
 	
 	public TextOptionsRegistry() {
-		register(new TextOptionType<>(OptionMessages.class, OptionMessages::new, "messages"));
+		register(new TextOptionType<>(OptionMessageStates.class, OptionMessageStates::new, "messages"));
 		register(new TextOptionType<>(OptionName.class, OptionName::new, "customName"));
 		register(new TextOptionType<>(OptionRandom.class, OptionRandom::new, "random"));
 		register(new TextOptionType<>(OptionRepeat.class, OptionRepeat::new, "repeat"));
@@ -61,9 +61,9 @@ public class TextOptionsRegistry {
 	
 	public static class TextOptionType<T extends TextOption<?>> {
 		
-		private Class<T> clazz;
-		private Function<TextInstance, T> optionSupplier;
-		private String configKey;
+		private final Class<T> clazz;
+		private final Function<TextInstance, T> optionSupplier;
+		private final String configKey;
 		
 		public TextOptionType(Class<T> clazz, Function<TextInstance, T> optionSupplier, String configKey) {
 			this.clazz = clazz;

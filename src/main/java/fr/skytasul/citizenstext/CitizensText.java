@@ -1,9 +1,13 @@
 package fr.skytasul.citizenstext;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fr.skytasul.citizenstext.predicates.DefaultPredicate;
+import fr.skytasul.citizenstext.predicates.PredicateManager;
+import fr.skytasul.citizenstext.predicates.QuestFinishPredicate;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,8 +54,11 @@ public class CitizensText extends JavaPlugin implements Listener{
 	@Override
 	public void onEnable(){
 		command = new TextCommand();
-		getCommand("text").setExecutor(command);
-		getCommand("text").setTabCompleter(command);
+		Objects.requireNonNull(getCommand("text")).setExecutor(command);
+		Objects.requireNonNull(getCommand("text")).setTabCompleter(command);
+
+		PredicateManager.register(DefaultPredicate.class, "default");
+		PredicateManager.register(QuestFinishPredicate.class, "finishquest");
 		
 		saveDefaultConfig();
 

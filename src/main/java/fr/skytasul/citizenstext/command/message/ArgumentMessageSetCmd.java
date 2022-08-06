@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import fr.skytasul.citizenstext.options.OptionMessageStates;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -23,7 +24,7 @@ public class ArgumentMessageSetCmd extends MessageCommandArgument {
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, String[] args, OptionMessages option, Message message) {
+	public boolean onCommand(CommandSender sender, String[] args, OptionMessageStates option, Message message) {
 		if (args.length == 0) {
 			sender.sendMessage(ChatColor.RED + "You must specify a command (" + ARGUMENTS_STRING + ")");
 			return false;
@@ -31,10 +32,6 @@ public class ArgumentMessageSetCmd extends MessageCommandArgument {
 		String argument = args[0].toLowerCase();
 		switch (argument) {
 		case "add":
-			if (args.length == 0) {
-				sender.sendMessage(ChatColor.RED + "You must specify a command (without /). You can insert {PLAYER} which will be replaced by the player name.");
-				return false;
-			}
 			message.addCommand(String.join(" ", Arrays.copyOfRange(args, 1, args.length)));
 			sender.sendMessage(ChatColor.GREEN + "Successfully added command for message \"" + message.getText() + "\"§r§a. New commands: " + message.getCommandsList());
 			break;
@@ -48,25 +45,23 @@ public class ArgumentMessageSetCmd extends MessageCommandArgument {
 				return false;
 			}
 			
-			int id = 0;
-			if (args.length > 0) {
-				try {
-					id = Integer.parseInt(args[1]);
-				}catch (IllegalArgumentException ex) {
-					sender.sendMessage(ChatColor.RED + "\"" + args[1] + "\" isn't a valid number.");
-					return false;
-				}
-				
-				if (id < 0 || id >= message.getCommands().size()) {
-					sender.sendMessage(ChatColor.RED + "The command ID must be a number between 0 and " + (message.getCommands().size() - 1));
-					return false;
-				}
+			int id;
+			try {
+				id = Integer.parseInt(args[1]);
+			}catch (IllegalArgumentException ex) {
+				sender.sendMessage(ChatColor.RED + "\"" + args[1] + "\" isn't a valid number.");
+				return false;
+			}
+
+			if (id < 0 || id >= message.getCommands().size()) {
+				sender.sendMessage(ChatColor.RED + "The command ID must be a number between 0 and " + (message.getCommands().size() - 1));
+				return false;
 			}
 			CTCommand command = message.getCommand(id);
 			if (argument.equals("auto")) {
 				command.auto = !command.auto;
 				sender.sendMessage("§aAuto-dispatchment of commands is now §o" + (command.auto ? "enabled" : "disabled. §7Please note that clickable messages are not compatible with console dispatchment."));
-			}else if (argument.equals("console")) {
+			}else {
 				command.console = !command.console;
 				sender.sendMessage("§aDispatchment by console of commands is now §o" + (command.console ? "enabled. §7Please note that this feature is not compatible with clickable messages." : "disabled"));
 			}
@@ -79,7 +74,7 @@ public class ArgumentMessageSetCmd extends MessageCommandArgument {
 	}
 	
 	@Override
-	public List<String> onTabCompleteMessage(CommandSender sender, String[] args, OptionMessages option, String argCmdId) {
+	public List<String> onTabCompleteMessage(CommandSender sender, String[] args, OptionMessageStates option, String argCmdId) {
 		if (args.length == 1) return ARGUMENTS;
 		if (args.length == 2) {
 			String operation = args[0].toLowerCase();
@@ -87,7 +82,7 @@ public class ArgumentMessageSetCmd extends MessageCommandArgument {
 				try {
 					Message message = option.getMessage(Integer.parseInt(argCmdId));
 					return IntStream.range(0, message.getCommands().size()).mapToObj(Integer::toString).collect(Collectors.toList());
-				}catch (Exception ex) {}
+				}catch (Exception ignored) {}
 			}
 		}
 		return Collections.emptyList();

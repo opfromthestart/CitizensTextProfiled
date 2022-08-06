@@ -24,4 +24,8 @@ public abstract class NamedPredicate implements Predicate<Player> {
     public abstract void fromConfig(ConfigurationSection data);
     public abstract void fromMap(Map<String, Object> data);
 
+    public String getDesc()
+    {
+        return name;
+    }
 }

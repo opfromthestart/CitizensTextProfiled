@@ -1,5 +1,6 @@
 package fr.skytasul.citizenstext.command.message;
 
+import fr.skytasul.citizenstext.options.OptionMessageStates;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -13,7 +14,7 @@ public class ArgumentMessageSetDelay extends MessageCommandArgument {
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, String[] args, OptionMessages option, Message message) {
+	public boolean onCommand(CommandSender sender, String[] args, OptionMessageStates option, Message message) {
 		try {
 			int delay = args.length == 0 ? -1 : Integer.parseInt(args[0]);
 			message.setDelay(delay);

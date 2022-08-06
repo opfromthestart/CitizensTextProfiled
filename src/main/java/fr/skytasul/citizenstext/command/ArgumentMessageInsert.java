@@ -2,15 +2,16 @@ package fr.skytasul.citizenstext.command;
 
 import java.util.Arrays;
 
+import fr.skytasul.citizenstext.options.OptionMessageStates;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import fr.skytasul.citizenstext.options.OptionMessages;
 
-public class ArgumentMessageInsert extends TextCommandArgument<OptionMessages> {
+public class ArgumentMessageInsert extends TextCommandArgument<OptionMessageStates> {
 	
 	public ArgumentMessageInsert() {
-		super("insert", "insert", OptionMessages.class);
+		super("insert", "insert", OptionMessageStates.class);
 	}
 	
 	@Override
@@ -19,7 +20,7 @@ public class ArgumentMessageInsert extends TextCommandArgument<OptionMessages> {
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, String[] args, OptionMessages option) {
+	public boolean onCommand(CommandSender sender, String[] args, OptionMessageStates option) {
 		if (args.length < 2) {
 			sender.sendMessage(ChatColor.RED + "You must specify an ID and a message.");
 			return false;

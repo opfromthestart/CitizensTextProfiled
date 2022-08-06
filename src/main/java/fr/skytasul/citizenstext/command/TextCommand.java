@@ -20,11 +20,12 @@ import fr.skytasul.citizenstext.command.message.ArgumentMessageSetCmd;
 import fr.skytasul.citizenstext.command.message.ArgumentMessageSetDelay;
 import fr.skytasul.citizenstext.command.message.ArgumentMessageSetSender;
 import fr.skytasul.citizenstext.command.message.ArgumentMessageSetSound;
+import org.jetbrains.annotations.NotNull;
 
 public class TextCommand implements TabExecutor {
 	
-	private List<CommandArgument> arguments = new ArrayList<>();
-	private Map<String, CommandArgument> argumentsKeyMapping = new HashMap<>();
+	private final List<CommandArgument> arguments = new ArrayList<>();
+	private final Map<String, CommandArgument> argumentsKeyMapping = new HashMap<>();
 	
 	public TextCommand() {
 		registerArgument(new ArgumentMessageAdd());
@@ -44,6 +45,11 @@ public class TextCommand implements TabExecutor {
 		registerArgument(new ArgumentMessageClear());
 		registerArgument(new ArgumentTextConvert());
 		registerArgument(new ArgumentTextDelete());
+
+		registerArgument(new ArgumentPredicateAdd());
+		registerArgument(new ArgumentPredicateEdit());
+		registerArgument(new ArgumentPredicateRemove());
+		registerArgument(new ArgumentPredicateSelect());
 		
 		registerArgument(new ArgumentReload());
 		registerArgument(new ArgumentHelp(this));
@@ -60,7 +66,7 @@ public class TextCommand implements TabExecutor {
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
 		if (args.length == 0) {
 			sender.sendMessage(ChatColor.RED + "Unknown command. Type /text help to get some help for this command.");
 			return true;
@@ -90,7 +96,7 @@ public class TextCommand implements TabExecutor {
 	}
 
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
 		List<String> tmp = null;
 		Collection<String> find = null;
 		if (args.length == 1){

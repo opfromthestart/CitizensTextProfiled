@@ -3,6 +3,7 @@ package fr.skytasul.citizenstext.command.message;
 import java.util.Arrays;
 import java.util.List;
 
+import fr.skytasul.citizenstext.options.OptionMessageStates;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -19,7 +20,7 @@ public class ArgumentMessageSetSound extends MessageCommandArgument {
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, String[] args, OptionMessages option, Message message) {
+	public boolean onCommand(CommandSender sender, String[] args, OptionMessageStates option, Message message) {
 		if (args.length == 0) {
 			sender.sendMessage(ChatColor.RED + "You must specify a command (" + ARGUMENTS_STRING + ")");
 			return false;

@@ -1,14 +1,15 @@
 package fr.skytasul.citizenstext.command;
 
+import fr.skytasul.citizenstext.options.OptionMessageStates;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import fr.skytasul.citizenstext.options.OptionMessages;
 
-public class ArgumentMessageAdd extends TextCommandArgument<OptionMessages> {
+public class ArgumentMessageAdd extends TextCommandArgument<OptionMessageStates> {
 	
 	public ArgumentMessageAdd() {
-		super("add", "add", OptionMessages.class);
+		super("add", "add", OptionMessageStates.class);
 	}
 	
 	@Override
@@ -17,7 +18,7 @@ public class ArgumentMessageAdd extends TextCommandArgument<OptionMessages> {
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, String[] args, OptionMessages option) {
+	public boolean onCommand(CommandSender sender, String[] args, OptionMessageStates option) {
 		if (args.length == 0) {
 			sender.sendMessage(ChatColor.RED + "You must specify a message.");
 			return false;

@@ -7,10 +7,13 @@ import java.util.*;
 import fr.skytasul.citizenstext.predicates.NamedPredicate;
 import fr.skytasul.citizenstext.predicates.PredicateManager;
 import fr.skytasul.citizenstext.texts.TextInstance;
-import jdk.internal.net.http.common.Pair;
+import fr.skytasul.citizenstext.utils.Pair;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class OptionMessageStates extends TextOption<List<Pair<NamedPredicate, List<Message>>>>{
+
+    int selectedPredicate = 0;
 
     protected OptionMessageStates(TextInstance txt) {
         super(txt);
@@ -69,37 +72,73 @@ public class OptionMessageStates extends TextOption<List<Pair<NamedPredicate, Li
 
     public void addPredicate(NamedPredicate n) {
         getValue().add(new Pair<>(n, new ArrayList<>()));
+        selectedPredicate = getValue().size()-1;
     }
 
-    public void editPredicate(int id, Map<String, Object> data) {
-        getValue().get(id).first.fromMap(data);
+    public void editPredicate(Map<String, Object> data) {
+        getValue().get(selectedPredicate).first.fromMap(data);
+    }
+
+    public void selectPredicate(int id) {
+        selectedPredicate = id;
     }
 
     public Pair<NamedPredicate, List<Message>> removePredicate(int n) {
         return getValue().remove(n);
     }
 
-    public void addMessage(int n, String msg) {
-        getValue().get(n).second.add(new Message(msg));
+    public void addMessage(String msg) {
+        getValue().get(selectedPredicate).second.add(new Message(msg));
     }
 
-    public String editMessage(int n, int id, String msg) {
-        return getValue().get(n).second.get(id).setText(msg);
+    public String editMessage(int id, String msg) {
+        return getValue().get(selectedPredicate).second.get(id).setText(msg);
     }
 
-    public void insertMessage(int n, int id, String msg) {
-        getValue().get(n).second.add(id, new Message(msg));
+    public void insertMessage(int id, String msg) {
+        getValue().get(selectedPredicate).second.add(id, new Message(msg));
     }
 
-    public String removeMessage(int n, int id) {
-        return getValue().get(n).second.remove(id).getText();
+    public String removeMessage(int id) {
+        return getValue().get(selectedPredicate).second.remove(id).getText();
     }
 
-    public int messagesSize(int n) {
-        return getValue().get(n).second.size();
+    public int messagesSize() {
+        return getValue().get(selectedPredicate).second.size();
     }
 
-    public Message getMessage(int n, int id) {
-        return getValue().get(n).second.get(id);
+    public int predicatesSize() {
+        return getValue().size();
+    }
+
+    public Message getMessage(int id) {
+        return getValue().get(selectedPredicate).second.get(id);
+    }
+
+    public int clear() {
+        int i = getValue().get(selectedPredicate).second.size();
+        getValue().get(selectedPredicate).second.clear();
+        return i;
+    }
+
+    public String listMessages() {
+        StringJoiner stb = new StringJoiner("\n");
+        for (int i = 0; i < getValue().size(); i++) {
+            Message msg = getValue().get(selectedPredicate).second.get(i);
+            stb.add(ChatColor.AQUA + "" + i + " : "
+                    + ChatColor.GREEN + msg.getText()
+                    + (msg.getCommands().isEmpty() ? "" : ChatColor.GRAY + " (" + msg.getCommands().size() + " command(s): " + msg.getCommandsList() + "§7)"));
+        }
+        return stb.toString();
+    }
+
+    public String getPredicateText()
+    {
+        return getValue().get(selectedPredicate).first.getDesc();
+    }
+
+    public List<Message> getSelectedMessages()
+    {
+        return getValue().get(selectedPredicate).second;
     }
 }

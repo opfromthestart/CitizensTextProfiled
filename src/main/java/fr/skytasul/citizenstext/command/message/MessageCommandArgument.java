@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import fr.skytasul.citizenstext.options.OptionMessageStates;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -13,14 +14,14 @@ import fr.skytasul.citizenstext.command.TextCommandArgument;
 import fr.skytasul.citizenstext.message.Message;
 import fr.skytasul.citizenstext.options.OptionMessages;
 
-public abstract class MessageCommandArgument extends TextCommandArgument<OptionMessages> {
+public abstract class MessageCommandArgument extends TextCommandArgument<OptionMessageStates> {
 	
 	protected MessageCommandArgument(String cmdArgument, String cmdPermission) {
-		super(cmdArgument, cmdPermission, OptionMessages.class);
+		super(cmdArgument, cmdPermission, OptionMessageStates.class);
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, String[] args, OptionMessages option) {
+	public boolean onCommand(CommandSender sender, String[] args, OptionMessageStates option) {
 		if (args.length == 0) {
 			sender.sendMessage(ChatColor.RED + "You must specify an ID.");
 			return false;
@@ -43,7 +44,7 @@ public abstract class MessageCommandArgument extends TextCommandArgument<OptionM
 	}
 	
 	@Override
-	public List<String> onTabComplete(CommandSender sender, String[] args, OptionMessages option) {
+	public List<String> onTabComplete(CommandSender sender, String[] args, OptionMessageStates option) {
 		if (option == null) return Collections.emptyList();
 		if (args.length == 1) {
 			return IntStream.range(0, option.messagesSize()).mapToObj(Integer::toString).collect(Collectors.toList());
@@ -51,9 +52,9 @@ public abstract class MessageCommandArgument extends TextCommandArgument<OptionM
 		return onTabCompleteMessage(sender, Arrays.copyOfRange(args, 1, args.length), option, args[0]);
 	}
 	
-	public abstract boolean onCommand(CommandSender sender, String[] args, OptionMessages option, Message message);
+	public abstract boolean onCommand(CommandSender sender, String[] args, OptionMessageStates option, Message message);
 	
-	public List<String> onTabCompleteMessage(CommandSender sender, String[] args, OptionMessages option, String argMsgId) {
+	public List<String> onTabCompleteMessage(CommandSender sender, String[] args, OptionMessageStates option, String argMsgId) {
 		return Collections.emptyList();
 	}
 	

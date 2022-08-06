@@ -15,7 +15,7 @@ public class QuestFinishPredicate extends NamedPredicate {
 
     public QuestFinishPredicate(String name)
     {
-        super("finishQuest");
+        super("finishquest");
         questName = name;
     }
 
@@ -40,6 +40,11 @@ public class QuestFinishPredicate extends NamedPredicate {
 
     @Override
     public void fromMap(Map<String, Object> data) {
-        questName = (String) data.get("questName");
+        if (data.containsKey("questName")) questName = (String) data.get("questName");
+    }
+
+    @Override
+    public String getDesc() {
+        return "finishquest{questname:"+questName+"}";
     }
 }

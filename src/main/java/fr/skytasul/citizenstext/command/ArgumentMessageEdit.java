@@ -6,19 +6,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import fr.skytasul.citizenstext.options.OptionMessageStates;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import fr.skytasul.citizenstext.options.OptionMessages;
 
-public class ArgumentMessageEdit extends TextCommandArgument<OptionMessages> {
+public class ArgumentMessageEdit extends TextCommandArgument<OptionMessageStates> {
 	
 	public ArgumentMessageEdit() {
-		super("edit", "edit", OptionMessages.class);
+		super("edit", "edit", OptionMessageStates.class);
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, String[] args, OptionMessages option) {
+	public boolean onCommand(CommandSender sender, String[] args, OptionMessageStates option) {
 		if (args.length < 2) {
 			sender.sendMessage(ChatColor.RED + "You must specify an ID and a message.");
 			return false;
@@ -42,7 +43,7 @@ public class ArgumentMessageEdit extends TextCommandArgument<OptionMessages> {
 	}
 	
 	@Override
-	public List<String> onTabComplete(CommandSender sender, String[] args, OptionMessages option) {
+	public List<String> onTabComplete(CommandSender sender, String[] args, OptionMessageStates option) {
 		if (option != null && args.length == 1) {
 			return IntStream.range(0, option.messagesSize()).mapToObj(Integer::toString).collect(Collectors.toList());
 		}

@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import fr.skytasul.citizenstext.options.*;
 import fr.skytasul.citizenstext.predicates.NamedPredicate;
-import jdk.internal.net.http.common.Pair;
+import fr.skytasul.citizenstext.utils.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -256,16 +256,15 @@ public class TextInstance implements Listener{
 		}
 	}
 	
-	public static boolean load(ConfigurationSection data) {
+	public static void load(ConfigurationSection data) {
 		int npcID = data.getInt("npc");
 		NPC npc = CitizensAPI.getNPCRegistry().getById(npcID);
 		if (npc == null) {
 			CitizensText.getInstance().getLogger().warning("NPC with the id " + npcID + " doesn't exist. Consider removing this text instance.");
-			return false;
+			return;
 		}
 		
 		new TextInstance(npc, data).create();
-		return true;
 	}
 
 }

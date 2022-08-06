@@ -4,12 +4,10 @@ import fr.skytasul.citizenstext.options.OptionMessageStates;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import fr.skytasul.citizenstext.options.OptionMessages;
+public class ArgumentPredicateRemove extends TextCommandArgument<OptionMessageStates> {
 
-public class ArgumentMessageRemove extends TextCommandArgument<OptionMessageStates> {
-	
-	public ArgumentMessageRemove() {
-		super("remove", "remove", OptionMessageStates.class);
+	public ArgumentPredicateRemove() {
+		super("removepred", "removepred", OptionMessageStates.class);
 	}
 	
 	@Override
@@ -26,10 +24,10 @@ public class ArgumentMessageRemove extends TextCommandArgument<OptionMessageStat
 			return false;
 		}
 		try {
-			sender.sendMessage(ChatColor.GREEN + "Succesfully removed message \"" + option.removeMessage(id) + "\".");
+			sender.sendMessage(ChatColor.GREEN + "Succesfully removed predicate \"" + option.removePredicate(id) + "\".");
 			return true;
 		}catch (IndexOutOfBoundsException ex) {
-			sender.sendMessage(ChatColor.RED + "The number you have entered (" + id + ") is too big. It must be between 0 and " + (option.messagesSize() - 1) + ".");
+			sender.sendMessage(ChatColor.RED + "The number you have entered (" + id + ") is too big. It must be between 0 and " + (option.predicatesSize() - 1) + ".");
 		}
 		return false;
 	}
