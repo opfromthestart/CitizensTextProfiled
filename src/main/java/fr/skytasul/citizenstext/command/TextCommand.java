@@ -50,6 +50,8 @@ public class TextCommand implements TabExecutor {
 		registerArgument(new ArgumentPredicateEdit());
 		registerArgument(new ArgumentPredicateRemove());
 		registerArgument(new ArgumentPredicateSelect());
+		registerArgument(new ArgumentPredicateInsert());
+		registerArgument(new ArgumentPredicateList());
 		
 		registerArgument(new ArgumentReload());
 		registerArgument(new ArgumentHelp(this));

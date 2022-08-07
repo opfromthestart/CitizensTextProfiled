@@ -208,7 +208,7 @@ public class TextInstance implements Listener{
 			int id = ThreadLocalRandom.current().nextInt(messages.size());
 			TextSendEvent event = new TextSendEvent(p, this, messages.get(id));
 			Bukkit.getPluginManager().callEvent(event);
-			if (!event.isCancelled()) event.getMessage().send(p, id, this);
+			if (!event.isCancelled()) event.getMessage().send(p, id, messages.size(), this);
 			return;
 		}
 		int id;
@@ -226,7 +226,7 @@ public class TextInstance implements Listener{
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled()) return;
 		message = event.getMessage();
-		message.send(p, id, this);
+		message.send(p, id, messages.size(), this);
 		
 		id++;
 		if (messages.size() == id) { // last message

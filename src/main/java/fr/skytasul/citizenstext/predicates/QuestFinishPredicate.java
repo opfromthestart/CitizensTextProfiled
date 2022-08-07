@@ -52,6 +52,6 @@ public class QuestFinishPredicate extends NamedPredicate {
 
     @Override
     public String getDesc() {
-        return "finishquest{questName:"+questName+"}";
+        return ((NamedPredicate)this).name + "{questName:"+questName+"}";
     }
 }

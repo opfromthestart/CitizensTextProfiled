@@ -96,6 +96,11 @@ public class OptionMessageStates extends TextOption<List<Pair<NamedPredicate, Li
         return getValue().remove(n);
     }
 
+    public void insertPredicate(int id, NamedPredicate n) {
+        getValue().add(id, new Pair<>(n, new ArrayList<>()));
+        selectedPredicate = id;
+    }
+
     public void addMessage(String msg) {
         getValue().get(selectedPredicate).second.add(new Message(msg));
     }
@@ -149,5 +154,15 @@ public class OptionMessageStates extends TextOption<List<Pair<NamedPredicate, Li
     public List<Message> getSelectedMessages()
     {
         return getValue().get(selectedPredicate).second;
+    }
+
+    public String listPredicates() {
+        StringJoiner stb = new StringJoiner("\n");
+        for (int i = 0; i < getValue().size(); i++) {
+            Pair<NamedPredicate, List<Message>> msg = getValue().get(i);
+            stb.add(ChatColor.AQUA + "" + i + " : "
+                    + ChatColor.GREEN + msg.first.getDesc());
+        }
+        return stb.toString();
     }
 }

@@ -53,6 +53,7 @@ public class CitizensText extends JavaPlugin implements Listener {
 
 		PredicateManager.register(DefaultPredicate.class, "default");
 		PredicateManager.register(QuestFinishPredicate.class, "finishquest");
+		PredicateManager.register(ScoreboardEqualsPredicate.class, "scoreequals");
 		
 		saveDefaultConfig();
 

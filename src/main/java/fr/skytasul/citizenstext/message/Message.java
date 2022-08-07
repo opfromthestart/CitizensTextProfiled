@@ -98,18 +98,18 @@ public class Message {
 		return delay < 0 ? CitizensTextConfiguration.getTimeToContinue() * 20 : delay;
 	}
 	
-	public void send(Player p, int id, TextInstance textInstance) {
+	public void send(Player p, int id, int size, TextInstance textInstance) {
 		String msg = text;
 		msg = msg.replace("{PLAYER}", p.getName());
 		TextSender sender = getSender();
 		if (sender == null || sender instanceof TextSender.NPCSender) {
-			msg = TextSender.NPC_SENDER.format(msg, textInstance.getNPCName(), id + 1, textInstance.getMessages().messagesSize());
+			msg = TextSender.NPC_SENDER.format(msg, textInstance.getNPCName(), id + 1, size);
 		}else if (sender instanceof TextSender.PlayerSender) {
-			msg = TextSender.PLAYER_SENDER.format(msg, p.getName(), id + 1, textInstance.getMessages().messagesSize());
+			msg = TextSender.PLAYER_SENDER.format(msg, p.getName(), id + 1, size);
 		}else if (sender instanceof TextSender.NoSender) {
 			// no format here
 		}else if (sender instanceof TextSender.CustomizedSender) {
-			msg = ((TextSender.CustomizedSender) sender).format(msg, id + 1, textInstance.getMessages().messagesSize());
+			msg = ((TextSender.CustomizedSender) sender).format(msg, id + 1, size);
 		}
 		if (CitizensText.getInstance().isPAPIEnabled()) msg = PlaceholderDepend.format(msg, p);
 		

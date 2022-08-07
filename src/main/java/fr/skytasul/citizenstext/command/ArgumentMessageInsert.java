@@ -28,8 +28,8 @@ public class ArgumentMessageInsert extends TextCommandArgument<OptionMessageStat
 		
 		try {
 			int id = Integer.parseInt(args[0]);
-			if (id < 0 || id > option.getValue().size()) {
-				sender.sendMessage(ChatColor.RED + "The number you have entered (" + id + ") must be between 0 and " + option.getValue().size() + ".");
+			if (id < 0 || id > option.messagesSize()) {
+				sender.sendMessage(ChatColor.RED + "The number you have entered (" + id + ") must be between 0 and " + option.messagesSize() + ".");
 				return false;
 			}
 			String msg = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
