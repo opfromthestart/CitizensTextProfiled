@@ -6,6 +6,10 @@ import fr.skytasul.citizenstext.predicates.PredicateManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class ArgumentPredicateAdd extends TextCommandArgument<OptionMessageStates> {
 
 	public ArgumentPredicateAdd() {
@@ -34,10 +38,18 @@ public class ArgumentPredicateAdd extends TextCommandArgument<OptionMessageState
 		sender.sendMessage(ChatColor.GREEN + "Succesfully added predicate \"" + option.getPredicateText() + "\".");
 		return true;
 	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, String[] args, OptionMessageStates option) {
+		if (option != null && args.length == 1) {
+			return new ArrayList<>(PredicateManager.preds.keySet());
+		}
+		return Collections.emptyList();
+	}
 	
 	@Override
 	public String getHelpSyntax() {
-		return super.getHelpSyntax() + " <message>";
+		return super.getHelpSyntax() + " <predicate>";
 	}
 	
 	@Override

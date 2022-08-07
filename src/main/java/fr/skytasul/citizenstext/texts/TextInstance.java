@@ -190,6 +190,7 @@ public class TextInstance implements Listener{
 		{
 			if (pair.first.test(p))
 			{
+				//System.out.println("Using predicate "+pair.first.getDesc());
 				messages = pair.second;
 				break;
 			}

@@ -7,7 +7,7 @@ public class PredicateManager {
 
     public static <T extends NamedPredicate> void register(Class<T> pred, String name)
     {
-        System.out.println(name + " " + pred.getName());
+        //System.out.println(name + " " + pred.getName());
         preds.put(name, pred);
     }
 }

@@ -1,45 +1,39 @@
 package fr.skytasul.citizenstext;
 
-import java.io.File;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import fr.skytasul.citizenstext.command.TextCommand;
+import fr.skytasul.citizenstext.options.TextOptionsRegistry;
+import fr.skytasul.citizenstext.players.CTPlayersManager;
 import fr.skytasul.citizenstext.predicates.DefaultPredicate;
 import fr.skytasul.citizenstext.predicates.PredicateManager;
 import fr.skytasul.citizenstext.predicates.QuestFinishPredicate;
-import org.bstats.bukkit.Metrics;
+import fr.skytasul.citizenstext.predicates.ScoreboardEqualsPredicate;
+import fr.skytasul.citizenstext.texts.TextsManager;
+import net.citizensnpcs.api.event.CitizensPreReloadEvent;
+import net.citizensnpcs.api.event.CitizensReloadEvent;
+import net.md_5.bungee.api.chat.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import fr.skytasul.citizenstext.command.TextCommand;
-import fr.skytasul.citizenstext.options.TextOptionsRegistry;
-import fr.skytasul.citizenstext.players.CTPlayersManager;
-import fr.skytasul.citizenstext.texts.TextsManager;
-
-import net.citizensnpcs.api.event.CitizensPreReloadEvent;
-import net.citizensnpcs.api.event.CitizensReloadEvent;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import java.io.File;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Plugin's main class. Fetch the instance using {@link #getInstance()}
  * @author SkytAsul
  */
-public class CitizensText extends JavaPlugin implements Listener{
+public class CitizensText extends JavaPlugin implements Listener {
 	
 	private static CitizensText instance;
 
 	private boolean enabled = false;
 	private boolean disabled = false;
 
-	private TextsManager texts;
-	private CTPlayersManager players;
+	private fr.skytasul.citizenstext.texts.TextsManager texts;
+	private fr.skytasul.citizenstext.players.CTPlayersManager players;
 	
 	public boolean papi;
 	
@@ -70,9 +64,6 @@ public class CitizensText extends JavaPlugin implements Listener{
 		if (papi) getLogger().info("Hooked into PlaceholderAPI!");
 		
 		getServer().getScheduler().runTaskLater(this, this::loadDatas, 3L);
-		
-		Metrics metrics = new Metrics(this, 9557);
-		metrics.addCustomChart(new Metrics.SingleLineChart("texts", () -> texts.getTexts().size()));
 	}
 	
 	@Override

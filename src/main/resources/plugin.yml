@@ -2,7 +2,7 @@ name: CitizensText
 author: SkytAsul
 version: ${project.version}
 description: Allows to make speak your NPCs from Citizens.
-depend: [Citizens]
+depend: [Citizens, Quests]
 softdepend: [PlaceholderAPI]
 main: fr.skytasul.citizenstext.CitizensText
 api-version: 1.13

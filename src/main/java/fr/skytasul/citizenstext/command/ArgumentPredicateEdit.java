@@ -1,13 +1,11 @@
 package fr.skytasul.citizenstext.command;
 
 import fr.skytasul.citizenstext.options.OptionMessageStates;
+import fr.skytasul.citizenstext.predicates.PredicateManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -32,21 +30,13 @@ public class ArgumentPredicateEdit extends TextCommandArgument<OptionMessageStat
 	}
 	
 	@Override
-	public List<String> onTabComplete(CommandSender sender, String[] args, OptionMessageStates option) {
-		if (option != null && args.length == 1) {
-			return IntStream.range(0, option.messagesSize()).mapToObj(Integer::toString).collect(Collectors.toList());
-		}
-		return Collections.emptyList();
-	}
-	
-	@Override
 	public String getHelpSyntax() {
-		return super.getHelpSyntax() + " <id> <message>";
+		return super.getHelpSyntax() + " <field> <value>";
 	}
 	
 	@Override
 	protected String getHelpDescription() {
-		return "Edit a previously created message";
+		return "Edit a previously created predicate.";
 	}
 	
 }

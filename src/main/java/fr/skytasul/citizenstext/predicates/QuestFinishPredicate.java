@@ -19,11 +19,18 @@ public class QuestFinishPredicate extends NamedPredicate {
         questName = name;
     }
 
+    public QuestFinishPredicate()
+    {
+        super("finishquest");
+        questName = "";
+    }
+
     @Override
     public boolean test(Player player) {
         Quests quest = ((Quests) Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("Quests")));
         IQuester quester = quest.getQuester(player.getUniqueId());
-        return quester.getCompletedTimes().contains(quest.getQuestTemp(questName));
+        System.out.println(quester.getCompletedQuestsTemp().contains(quest.getQuestTemp(questName)));
+        return quester.getCompletedQuestsTemp().contains(quest.getQuestTemp(questName));
     }
 
     @Override
@@ -45,6 +52,6 @@ public class QuestFinishPredicate extends NamedPredicate {
 
     @Override
     public String getDesc() {
-        return "finishquest{questname:"+questName+"}";
+        return "finishquest{questName:"+questName+"}";
     }
 }

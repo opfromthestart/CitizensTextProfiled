@@ -4,8 +4,6 @@ import fr.skytasul.citizenstext.options.OptionMessageStates;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import fr.skytasul.citizenstext.options.OptionMessages;
-
 public class ArgumentMessageRemove extends TextCommandArgument<OptionMessageStates> {
 	
 	public ArgumentMessageRemove() {

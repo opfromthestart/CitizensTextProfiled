@@ -37,7 +37,6 @@ public class OptionMessageStates extends TextOption<List<Pair<NamedPredicate, Li
                 tmp3.put(String.valueOf(j), pn.second.get(j).serialize());
             tmp2.put("messages", tmp3);
             tmp.put(String.valueOf(i), tmp2);
-            i++;
         }
         config.set(key, tmp);
     }
@@ -48,18 +47,28 @@ public class OptionMessageStates extends TextOption<List<Pair<NamedPredicate, Li
         ConfigurationSection section = config.getConfigurationSection(key);
         assert section != null;
         section.getKeys(false).forEach(skey -> {
-            String predName = section.getString("name");
+            ConfigurationSection subsection = section.getConfigurationSection(skey);
+            String predName = subsection.getString("name");
+            if (!PredicateManager.preds.containsKey(predName))
+            {
+                System.out.println("Key " + predName + " not found.");
+            }
             NamedPredicate pred = null;
             try {
                 pred = (NamedPredicate) PredicateManager.preds.get(predName).newInstance();
-                pred.fromConfig(section.getConfigurationSection("data"));
+                pred.fromConfig(subsection.getConfigurationSection("data"));
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
             List<Message> messages = new ArrayList<>();
-            ConfigurationSection messageSection = section.getConfigurationSection("messages");
+            ConfigurationSection messageSection = subsection.getConfigurationSection("messages");
             assert messageSection != null;
-            messageSection.getKeys(false).forEach(mkey -> messages.add(new Message(Objects.requireNonNull(messageSection.getConfigurationSection(mkey)))));
+            messageSection.getKeys(false).forEach(mkey -> {
+                if (messageSection.getConfigurationSection(mkey) != null)
+                    messages.add(new Message(Objects.requireNonNull(messageSection.getConfigurationSection(mkey))));
+                else
+                    messages.add(new Message(messageSection.getString(mkey)));
+            });
             temp.add(new Pair<>(pred, messages));
         });
         return temp;
@@ -123,7 +132,7 @@ public class OptionMessageStates extends TextOption<List<Pair<NamedPredicate, Li
 
     public String listMessages() {
         StringJoiner stb = new StringJoiner("\n");
-        for (int i = 0; i < getValue().size(); i++) {
+        for (int i = 0; i < getValue().get(selectedPredicate).second.size(); i++) {
             Message msg = getValue().get(selectedPredicate).second.get(i);
             stb.add(ChatColor.AQUA + "" + i + " : "
                     + ChatColor.GREEN + msg.getText()

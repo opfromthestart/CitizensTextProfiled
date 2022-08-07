@@ -4,6 +4,12 @@ import fr.skytasul.citizenstext.options.OptionMessageStates;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 public class ArgumentPredicateRemove extends TextCommandArgument<OptionMessageStates> {
 
 	public ArgumentPredicateRemove() {
@@ -30,6 +36,14 @@ public class ArgumentPredicateRemove extends TextCommandArgument<OptionMessageSt
 			sender.sendMessage(ChatColor.RED + "The number you have entered (" + id + ") is too big. It must be between 0 and " + (option.predicatesSize() - 1) + ".");
 		}
 		return false;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, String[] args, OptionMessageStates option) {
+		if (option != null && args.length == 1) {
+			return IntStream.range(0, option.predicatesSize()).mapToObj(Integer::toString).collect(Collectors.toList());
+		}
+		return Collections.emptyList();
 	}
 	
 	@Override

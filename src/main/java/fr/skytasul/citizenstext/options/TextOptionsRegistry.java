@@ -13,7 +13,7 @@ public class TextOptionsRegistry {
 	private final Map<String, TextOptionType<?>> configMapping = new HashMap<>();
 	
 	public TextOptionsRegistry() {
-		register(new TextOptionType<>(OptionMessageStates.class, OptionMessageStates::new, "messages"));
+		register(new TextOptionType<>(OptionMessageStates.class, OptionMessageStates::new, "predicates"));
 		register(new TextOptionType<>(OptionName.class, OptionName::new, "customName"));
 		register(new TextOptionType<>(OptionRandom.class, OptionRandom::new, "random"));
 		register(new TextOptionType<>(OptionRepeat.class, OptionRepeat::new, "repeat"));
