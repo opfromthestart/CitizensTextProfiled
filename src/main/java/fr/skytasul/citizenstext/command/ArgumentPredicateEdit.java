@@ -23,9 +23,10 @@ public class ArgumentPredicateEdit extends TextCommandArgument<OptionMessageStat
 		}
 
 		HashMap<String, Object> data = new HashMap<>();
-		data.put(args[0], args[1]);
+		String others = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+		data.put(args[0], others);
 		option.editPredicate(data);
-		sender.sendMessage(ChatColor.GREEN + "Succesfully edited field \"" + args[0] + "\"§r§a to " + args[1] + ".");
+		sender.sendMessage(ChatColor.GREEN + "Succesfully edited field \"" + args[0] + "\"§r§a to " + others + ".");
 		return true;
 	}
 	
